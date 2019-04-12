@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  frontend:
+    build: ./staubwedel-frontend
+    volumes: 
+      - frontend:/volume/dist/staubwedel-website
+
+  web:
+    image: nginx:alpine
+    restart: always
+    volumes:
+      - frontend:/var/www/html:ro
+    environment:
+      - VIRTUAL_HOST=derstaubwedel.com
+      - LETSENCRYPT_HOST=derstaubwedel.com
+      - LETSENCRYPT_EMAIL=shneky@protonmail.com
+    depends_on:
+      - frontend
+    networks:
+      - nginx-proxy
+      - default
+
+volumes:
+  frontend:
+
+networks:
+  nginx-proxy:
+    external: 
+      name: nginx-proxy
