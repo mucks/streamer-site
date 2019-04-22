@@ -1,10 +1,10 @@
 {
-	"folders": [
+    "folders": [
         {
             "path": "staubwedel-frontend"
         },
         {
-            "path": "."
+            "path": "/home/shneky/projects/tsquery_rs"
         }
     ]
 }
