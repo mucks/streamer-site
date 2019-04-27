@@ -1,15 +1,5 @@
-use crate::client::Client;
 use std::collections::HashMap;
 use telnet::Telnet;
-
-#[derive(Serialize, Debug, Clone)]
-pub struct ChannelOutput {
-    pub name: String,
-    pub children: Vec<ChannelOutput>,
-    pub cid: u32,
-    pub pid: u32,
-    pub clients: Vec<Client>,
-}
 
 #[derive(Default, Debug)]
 pub struct Channel {
@@ -28,59 +18,6 @@ impl Channel {
         let maps = crate::util::telnet_event_to_hashmap(&event).unwrap();
         maps.iter().map(|map| Channel::from(map)).collect()
     }
-
-    pub fn get_output(mut conn: &mut Telnet) -> Vec<ChannelOutput> {
-        let clients = crate::client::Client::get_all(&mut conn);
-        let channels = crate::channel::Channel::get_all(&mut conn);
-        let mut channel_outputs = Vec::new();
-        /*
-        for chan in &channels {
-            if chan.pid != 0 {
-                if let Some(out) = channel_outputs.iter_mut().find(|o| o.cid == chan.pid) {
-                    out.children.push(channel_to_out(&chan, &clients));
-                }
-            }
-        }
-        */
-
-        for chan in &channels {
-            channel_outputs.push(channel_to_out(&chan, &clients));
-            for out in &mut channel_outputs {
-                if chan.pid == out.cid {
-                    out.children.push(channel_to_out(&chan, &clients));
-                }
-                for out_child in &mut out.children {
-                    if chan.pid == out_child.cid {
-                        out_child.children.push(channel_to_out(&chan, &clients));
-                    }
-                }
-            }
-        }
-
-        channel_outputs
-            .iter()
-            .filter(|out| out.pid == 0)
-            .map(|out| out.clone())
-            .collect()
-    }
-}
-
-fn channel_to_out(chan: &Channel, clients: &Vec<Client>) -> ChannelOutput {
-    ChannelOutput {
-        name: chan.channel_name.clone(),
-        children: Vec::new(),
-        cid: chan.cid,
-        pid: chan.pid,
-        clients: get_clients_by_cid(&clients, &chan.cid),
-    }
-}
-
-fn get_clients_by_cid(clients: &Vec<Client>, cid: &u32) -> Vec<Client> {
-    clients
-        .iter()
-        .filter(|c| cid == &c.cid)
-        .map(|c| c.clone())
-        .collect()
 }
 
 impl From<&HashMap<String, String>> for Channel {

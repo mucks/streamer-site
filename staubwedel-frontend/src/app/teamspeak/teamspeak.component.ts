@@ -5,18 +5,8 @@ import {MatTreeNestedDataSource} from '@angular/material';
 interface ChannelNode {
   name: string;
   children?: ChannelNode[];
-  clients?: ChannelNode[];
+  is_client: boolean,
 }
-
-const TREE_DATA: ChannelNode[] = [{
-  name: 'channel 1',
-  children: [
-    {name: 'channel 2'},
-    {name: 'channel 3'},
-    {name: 'channel 4'},
-  ],
-}];
-
 
 @Component({
   selector: 'app-teamspeak',
@@ -26,15 +16,11 @@ const TREE_DATA: ChannelNode[] = [{
 export class TeamspeakComponent implements OnInit {
   treeControl = new NestedTreeControl<ChannelNode>(node => node.children);
   dataSource = new MatTreeNestedDataSource<ChannelNode>();
-  channels: ChannelNode[] = [];
 
   constructor() {}
 
   hasChild = (_: number, node: ChannelNode) =>
       !!node.children && node.children.length > 0;
-
-  hasClient = (_: number, node: ChannelNode) =>
-      !!node.clients && node.clients.length > 0;
 
   ngOnInit() {
     const socket = new WebSocket('ws://localhost:3012');
@@ -47,6 +33,14 @@ export class TeamspeakComponent implements OnInit {
       const channels = JSON.parse(event.data);
       console.log(channels);
       this.dataSource.data = channels;
+      this.treeControl.dataNodes = channels;
+      this.treeControl.expandAll();
     });
+  }
+
+  formatName(name: string): string {
+    name = name.replace('\\s', ' ');
+    name = name.replace('\\s', ' ');
+    return name;
   }
 }

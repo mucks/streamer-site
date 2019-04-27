@@ -2,8 +2,19 @@
   display: none;
 }
 
+.example-tree {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+}
+
+.mat-tree-node {
+  color: white;
+  font-size: 12px;
+}
+
 .example-tree ul,
 .example-tree li {
+  color: white;
   margin-top: 0;
   margin-bottom: 0;
   list-style-type: none;

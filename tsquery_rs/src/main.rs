@@ -7,6 +7,7 @@ extern crate serde_derive;
 
 mod channel;
 mod client;
+mod tree_node;
 mod util;
 
 use std::sync::{Arc, Mutex};
@@ -23,7 +24,8 @@ fn run() {
         let conn_arc = main_conn_arc.clone();
         move |_msg| {
             let mut conn = conn_arc.lock().unwrap();
-            let output = serde_json::to_string(&channel::Channel::get_output(&mut conn)).unwrap();
+            let nodes = tree_node::TreeNode::get_all(&mut conn);
+            let output = serde_json::to_string(&nodes).unwrap();
             let m: ws::Message = ws::Message::text(output);
             out.send(m)
         }
