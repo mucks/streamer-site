@@ -1,5 +1,6 @@
 use crate::channel::Channel;
 use crate::client::Client;
+use crate::err::Error;
 use telnet::Telnet;
 
 #[derive(Serialize, Debug, Clone)]
@@ -36,19 +37,19 @@ impl From<&Client> for TreeNode {
 }
 
 impl TreeNode {
-    pub fn get_all(mut conn: &mut Telnet) -> Vec<TreeNode> {
-        let clients = crate::client::Client::get_all(&mut conn);
-        let channels = crate::channel::Channel::get_all(&mut conn);
+    pub fn get_all(mut conn: &mut Telnet) -> Result<Vec<TreeNode>, Error> {
+        let clients = Client::get_all(&mut conn)?;
+        let channels = Channel::get_all(&mut conn)?;
         let mut nodes = Vec::new();
 
         recursive_add_channels(&mut nodes, &channels, &0);
         recursive_add_clients(&mut nodes, &clients);
 
-        nodes
+        Ok(nodes
             .iter()
             .filter(|out| out.pid == 0)
             .map(|out| out.clone())
-            .collect()
+            .collect())
     }
 }
 

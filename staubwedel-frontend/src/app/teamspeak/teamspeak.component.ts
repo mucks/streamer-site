@@ -30,11 +30,12 @@ export class TeamspeakComponent implements OnInit {
     });
 
     socket.addEventListener('message', event => {
-      const channels = JSON.parse(event.data);
-      console.log(channels);
-      this.dataSource.data = channels;
-      this.treeControl.dataNodes = channels;
-      this.treeControl.expandAll();
+      const output = JSON.parse(event.data);
+      if (output.status == 200) {
+        this.dataSource.data = output.nodes;
+        this.treeControl.dataNodes = output.nodes;
+        this.treeControl.expandAll();
+      }
     });
   }
 

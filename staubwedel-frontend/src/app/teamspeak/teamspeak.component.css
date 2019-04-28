@@ -5,11 +5,19 @@
 .example-tree {
   background-color: rgba(0, 0, 0, 0.5);
   color: white;
+  width: 400px;
 }
 
 .mat-tree-node {
   color: white;
   font-size: 12px;
+  min-height: 20px;
+}
+
+.mat-icon-button {
+  height: 20px !important;
+  width: 20px !important;
+  line-height: 20px !important;
 }
 
 .example-tree ul,

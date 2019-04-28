@@ -1,3 +1,5 @@
+use crate::err::Error;
+use crate::util;
 use std::collections::HashMap;
 use telnet::Telnet;
 
@@ -12,11 +14,14 @@ pub struct Client {
 }
 
 impl Client {
-    pub fn get_all(conn: &mut Telnet) -> Vec<Client> {
-        conn.write(b"clientlist\r\n").unwrap();
-        let event = conn.read().unwrap();
-        let maps = crate::util::telnet_event_to_hashmap(&event).unwrap();
-        maps.iter().map(|map| Client::from(map)).collect()
+    pub fn get_all(conn: &mut Telnet) -> Result<Vec<Client>, Error> {
+        conn.write(b"clientlist\r\n")?;
+        let event = conn.read()?;
+        if let Some(maps) = util::telnet_event_to_hashmap(&event) {
+            Ok(maps.iter().map(|map| Client::from(map)).collect())
+        } else {
+            Err(Error::NoneError)
+        }
     }
 }
 
