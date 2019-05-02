@@ -1,6 +1,8 @@
 use crate::err::Error;
 use crate::util;
 use std::collections::HashMap;
+use std::thread;
+use std::time::Duration;
 use telnet::Telnet;
 
 #[derive(Default, Debug)]
@@ -16,6 +18,7 @@ pub struct Channel {
 impl Channel {
     pub fn get_all(conn: &mut Telnet) -> Result<Vec<Channel>, Error> {
         conn.write(b"channellist\r\n")?;
+        thread::sleep(Duration::from_millis(50));
         let event = conn.read()?;
         if let Some(maps) = util::telnet_event_to_hashmap(&event) {
             Ok(maps.iter().map(|map| Channel::from(map)).collect())

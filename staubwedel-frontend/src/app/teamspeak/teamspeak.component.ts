@@ -26,7 +26,9 @@ export class TeamspeakComponent implements OnInit {
     const socket = new WebSocket('ws://localhost:3012');
 
     socket.addEventListener('open', event => {
-      socket.send('hello world');
+      setInterval(() => {
+        socket.send('hello world');
+      }, 1000);
     });
 
     socket.addEventListener('message', event => {
