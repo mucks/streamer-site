@@ -29,7 +29,7 @@ fn main() {
 fn run() {
     let main_conn_arc = Arc::new(Mutex::new(util::init_conn()));
 
-    listen("127.0.0.1:3012", |out| {
+    listen("0.0.0.0:3012", |out| {
         let conn_arc = main_conn_arc.clone();
         move |_msg| {
             let mut conn = conn_arc.lock().unwrap();

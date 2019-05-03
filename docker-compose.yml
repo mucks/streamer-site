@@ -20,6 +20,11 @@ services:
     networks:
       - nginx-proxy
       - default
+  tsquery:
+    build: ./tsquery_rs
+    restart: always
+    networks:
+      - default
 
 volumes:
   frontend:

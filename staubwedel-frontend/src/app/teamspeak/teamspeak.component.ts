@@ -23,7 +23,7 @@ export class TeamspeakComponent implements OnInit {
       !!node.children && node.children.length > 0;
 
   ngOnInit() {
-    const socket = new WebSocket('ws://localhost:3012');
+    const socket = new WebSocket('ws://tsquery:3012');
 
     socket.addEventListener('open', event => {
       setInterval(() => {
