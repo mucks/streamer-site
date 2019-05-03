@@ -5,25 +5,31 @@ services:
     build: ./staubwedel-frontend
     volumes: 
       - frontend:/volume/dist/staubwedel-website
+  tsquery:
+    build: ./tsquery_rs
+    restart: always
+    expose: 
+      - 3012
+    networks:
+      - default
 
   web:
     image: nginx:alpine
     restart: always
+    ports:
+      - 80:80
     volumes:
       - frontend:/usr/share/nginx/html:ro
+      - ./default.conf:/etc/nginx/conf.d/default.conf:ro
     environment:
       - VIRTUAL_HOST=derstaubwedel.com
       - LETSENCRYPT_HOST=derstaubwedel.com
       - LETSENCRYPT_EMAIL=shneky@protonmail.com
     depends_on:
+      - tsquery
       - frontend
     networks:
       - nginx-proxy
-      - default
-  tsquery:
-    build: ./tsquery_rs
-    restart: always
-    networks:
       - default
 
 volumes:
