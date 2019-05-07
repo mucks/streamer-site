@@ -24,7 +24,7 @@ services:
       - LETSENCRYPT_HOST=derstaubwedel.com
       - LETSENCRYPT_EMAIL=shneky@protonmail.com
     depends_on:
-      - tsquery
+      - backend
       - frontend
     networks:
       - nginx-proxy
