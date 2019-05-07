@@ -18,7 +18,7 @@ pub struct Client {
 impl Client {
     pub fn get_all(conn: &mut Telnet) -> Result<Vec<Client>, Error> {
         conn.write(b"clientlist\r\n")?;
-        thread::sleep(Duration::from_millis(50));
+        thread::sleep(Duration::from_millis(100));
         let event = conn.read()?;
         if let Some(maps) = util::telnet_event_to_hashmap(&event) {
             Ok(maps.iter().map(|map| Client::from(map)).collect())

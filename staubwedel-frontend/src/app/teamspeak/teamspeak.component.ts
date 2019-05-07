@@ -1,6 +1,7 @@
 import {NestedTreeControl} from '@angular/cdk/tree';
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MatTreeNestedDataSource} from '@angular/material';
+
 import {TeamspeakService} from './teamspeak.service';
 
 interface ChannelNode {
@@ -14,9 +15,10 @@ interface ChannelNode {
   templateUrl: './teamspeak.component.html',
   styleUrls: ['./teamspeak.component.css']
 })
-export class TeamspeakComponent implements OnInit {
+export class TeamspeakComponent implements OnInit, OnDestroy {
   treeControl = new NestedTreeControl<ChannelNode>(node => node.children);
   dataSource = new MatTreeNestedDataSource<ChannelNode>();
+  interval: any;
 
   constructor(private tsService: TeamspeakService) {}
 
@@ -24,13 +26,19 @@ export class TeamspeakComponent implements OnInit {
       !!node.children && node.children.length > 0;
 
   ngOnInit() {
-    this.tsService.getTeamspeakData().subscribe(data => {
-      if (data['status'] == 200) {
-        this.dataSource.data = data['nodes'];
-        this.treeControl.dataNodes = data['nodes'];
-        this.treeControl.expandAll();
-      }
-    })
+    this.interval = setInterval(() => {
+      this.tsService.getTeamspeakData().subscribe(data => {
+        if (data['status'] == 200) {
+          this.dataSource.data = data['nodes'];
+          this.treeControl.dataNodes = data['nodes'];
+          this.treeControl.expandAll();
+        }
+      });
+    }, 1000);
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.interval);
   }
 
   formatName(name: string): string {

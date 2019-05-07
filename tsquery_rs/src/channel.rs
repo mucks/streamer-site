@@ -18,7 +18,7 @@ pub struct Channel {
 impl Channel {
     pub fn get_all(conn: &mut Telnet) -> Result<Vec<Channel>, Error> {
         conn.write(b"channellist\r\n")?;
-        thread::sleep(Duration::from_millis(50));
+        thread::sleep(Duration::from_millis(100));
         let event = conn.read()?;
         if let Some(maps) = util::telnet_event_to_hashmap(&event) {
             Ok(maps.iter().map(|map| Channel::from(map)).collect())
@@ -33,7 +33,6 @@ impl From<&HashMap<String, String>> for Channel {
         let mut channel = Channel::default();
         channel.channel_name = "not found".into();
         for (k, v) in map.iter() {
-            println!("{}: {}", k, v);
             if k.as_str() == "channel_name" {
                 channel.channel_name = v.to_owned();
             } else {
