@@ -1,3 +1,4 @@
+import {HttpClientModule} from '@angular/common/http';
 import {NgModule} from '@angular/core';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {MatButtonModule, MatIconModule} from '@angular/material';
@@ -20,7 +21,7 @@ import {TwitchComponent} from './twitch/twitch.component';
   ],
   imports: [
     BrowserModule, AppRoutingModule, BrowserAnimationsModule, FlexLayoutModule,
-    MaterialModule, MatIconModule, MatButtonModule
+    MaterialModule, MatIconModule, MatButtonModule, HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

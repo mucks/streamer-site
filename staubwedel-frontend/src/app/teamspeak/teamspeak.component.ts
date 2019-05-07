@@ -1,6 +1,7 @@
 import {NestedTreeControl} from '@angular/cdk/tree';
 import {Component, OnInit} from '@angular/core';
 import {MatTreeNestedDataSource} from '@angular/material';
+import {TeamspeakService} from './teamspeak.service';
 
 interface ChannelNode {
   name: string;
@@ -17,28 +18,19 @@ export class TeamspeakComponent implements OnInit {
   treeControl = new NestedTreeControl<ChannelNode>(node => node.children);
   dataSource = new MatTreeNestedDataSource<ChannelNode>();
 
-  constructor() {}
+  constructor(private tsService: TeamspeakService) {}
 
   hasChild = (_: number, node: ChannelNode) =>
       !!node.children && node.children.length > 0;
 
   ngOnInit() {
-    const socket = new WebSocket('wss://derstaubwedel.com/tsquery/');
-
-    socket.addEventListener('open', event => {
-      setInterval(() => {
-        socket.send('hello world');
-      }, 1000);
-    });
-
-    socket.addEventListener('message', event => {
-      const output = JSON.parse(event.data);
-      if (output.status == 200) {
-        this.dataSource.data = output.nodes;
-        this.treeControl.dataNodes = output.nodes;
+    this.tsService.getTeamspeakData().subscribe(data => {
+      if (data['status'] == 200) {
+        this.dataSource.data = data['nodes'];
+        this.treeControl.dataNodes = data['nodes'];
         this.treeControl.expandAll();
       }
-    });
+    })
   }
 
   formatName(name: string): string {
