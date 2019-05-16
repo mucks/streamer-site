@@ -14,11 +14,12 @@ import {NavbarComponent} from './navbar/navbar.component';
 import {TeamspeakComponent} from './teamspeak/teamspeak.component';
 import {TwitchChatComponent} from './twitch-chat/twitch-chat.component';
 import {TwitchVideoComponent} from './twitch-video/twitch-video.component';
+import { BackgroundComponent } from './background/background.component';
 
 @NgModule({
   declarations: [
     AppComponent, HomeComponent, NavbarComponent, TeamspeakComponent,
-    TwitchVideoComponent, BlogComponent, TwitchChatComponent
+    TwitchVideoComponent, BlogComponent, TwitchChatComponent, BackgroundComponent
   ],
   imports: [
     BrowserModule,

@@ -5,7 +5,13 @@
 html, body {
   font-family: 'Roboto', sans-serif;
   height: 100%;
-  background: grey;
+  background: rgba(1, 1, 1, 0)
+}
+
+@media only screen and (max-width: 600px) {
+  body, html {
+    background: rgba(1, 1, 1, 1)
+  }
 }
 
 body {
