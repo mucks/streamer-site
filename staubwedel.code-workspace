@@ -5,9 +5,6 @@
         },
         {
             "path": "tsquery_rs"
-        },
-        {
-            "path": "."
         }
     ]
 }

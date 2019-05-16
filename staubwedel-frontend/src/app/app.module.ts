@@ -1,9 +1,9 @@
 import {HttpClientModule} from '@angular/common/http';
 import {NgModule} from '@angular/core';
 import {FlexLayoutModule} from '@angular/flex-layout';
-import {MatButtonModule, MatIconModule} from '@angular/material';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {ClipboardModule} from 'ngx-clipboard';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -12,16 +12,22 @@ import {HomeComponent} from './home/home.component';
 import {MaterialModule} from './material/material.module';
 import {NavbarComponent} from './navbar/navbar.component';
 import {TeamspeakComponent} from './teamspeak/teamspeak.component';
-import {TwitchComponent} from './twitch/twitch.component';
+import {TwitchChatComponent} from './twitch-chat/twitch-chat.component';
+import {TwitchVideoComponent} from './twitch-video/twitch-video.component';
 
 @NgModule({
   declarations: [
     AppComponent, HomeComponent, NavbarComponent, TeamspeakComponent,
-    TwitchComponent, BlogComponent
+    TwitchVideoComponent, BlogComponent, TwitchChatComponent
   ],
   imports: [
-    BrowserModule, AppRoutingModule, BrowserAnimationsModule, FlexLayoutModule,
-    MaterialModule, MatIconModule, MatButtonModule, HttpClientModule
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    FlexLayoutModule,
+    MaterialModule,
+    HttpClientModule,
+    ClipboardModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

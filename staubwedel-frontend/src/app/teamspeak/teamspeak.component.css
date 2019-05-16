@@ -2,10 +2,16 @@
   display: none;
 }
 
-.example-tree {
+.teamspeak-card {
   background-color: rgba(0, 0, 0, 0.5);
   color: white;
-  width: 400px;
+  width: 300px;
+}
+
+.teamspeak-tree {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border-radius: 10px;
 }
 
 .mat-tree-node {
@@ -20,8 +26,8 @@
   line-height: 20px !important;
 }
 
-.example-tree ul,
-.example-tree li {
+.teamspeak-tree ul,
+.teamspeak-tree li {
   color: white;
   margin-top: 0;
   margin-bottom: 0;

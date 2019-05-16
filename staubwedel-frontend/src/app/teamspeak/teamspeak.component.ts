@@ -19,6 +19,7 @@ export class TeamspeakComponent implements OnInit, OnDestroy {
   treeControl = new NestedTreeControl<ChannelNode>(node => node.children);
   dataSource = new MatTreeNestedDataSource<ChannelNode>();
   interval: any;
+  teamspeakUrl = 'derstaubwedel.com';
 
   constructor(private tsService: TeamspeakService) {}
 
@@ -26,15 +27,20 @@ export class TeamspeakComponent implements OnInit, OnDestroy {
       !!node.children && node.children.length > 0;
 
   ngOnInit() {
+    this.applyTeamspeak();
     this.interval = setInterval(() => {
-      this.tsService.getTeamspeakData().subscribe(data => {
-        if (data['status'] == 200) {
-          this.dataSource.data = data['nodes'];
-          this.treeControl.dataNodes = data['nodes'];
-          this.treeControl.expandAll();
-        }
-      });
+      this.applyTeamspeak();
     }, 1000);
+  }
+
+  applyTeamspeak() {
+    this.tsService.getTeamspeakData().subscribe(data => {
+      if (data['status'] == 200) {
+        this.dataSource.data = data['nodes'];
+        this.treeControl.dataNodes = data['nodes'];
+        this.treeControl.expandAll();
+      }
+    });
   }
 
   ngOnDestroy() {

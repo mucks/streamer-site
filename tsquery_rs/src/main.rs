@@ -10,12 +10,9 @@ mod err;
 mod tree_node;
 mod util;
 
-use actix_web::{http::Method, server, App, HttpRequest};
-use tree_node::TreeNode;
-use std::fs::File;
-use std::io::{Read, Write};
 use std::thread;
 use std::time::Duration;
+use tree_node::TreeNode;
 
 #[derive(Serialize)]
 struct Output {
@@ -23,46 +20,43 @@ struct Output {
     pub nodes: Vec<TreeNode>,
 }
 
-fn save_ts() {
-    let mut conn = util::init_conn();
-    let output_struct = match tree_node::TreeNode::get_all(&mut conn) {
-        Ok(nodes) => Output {
-            status: 200,
-            nodes: nodes,
-        },
-        Err(error) => {
-            println!("{:?}", error);
-            Output {
-                status: 500,
-                nodes: Vec::new(),
-            }
-        }
-    };
-    let data = serde_json::to_string(&output_struct).unwrap();
-    let mut f = File::create("teamspeak.json").unwrap();
-    f.write_all(data.as_bytes()).unwrap();
+use actix_web::{middleware, web, App, HttpRequest, HttpResponse, HttpServer};
+use std::sync::{Arc, Mutex};
+
+pub struct TeamspeakData {
+    pub nodes: Vec<TreeNode>,
 }
 
 fn main() {
-    thread::spawn(move || {
-        loop {
-            thread::sleep(Duration::from_millis(2000));
-            save_ts();
+    let teamspeak_data_arc = Arc::new(Mutex::new(TeamspeakData { nodes: Vec::new() }));
+
+    let teamspeak_data_arc_clone = teamspeak_data_arc.clone();
+
+    thread::spawn(move || loop {
+        let mut conn = util::init_conn();
+        if let Ok(nodes) = tree_node::TreeNode::get_all(&mut conn) {
+            let mut teamspeak_data = teamspeak_data_arc_clone.lock().unwrap();
+            teamspeak_data.nodes = nodes;
         }
+        thread::sleep(Duration::from_millis(2000));
     });
-    server::new(|| {
+
+    HttpServer::new(move || {
         App::new()
-            .prefix("/api")
-            .resource("/tsquery", |r| r.method(Method::GET).f(index))
+            .data(teamspeak_data_arc.clone())
+            .service(web::resource("/api/tsquery").to(index))
     })
     .bind("0.0.0.0:3000")
     .unwrap()
     .run()
+    .unwrap();
 }
 
-fn index(_req: &HttpRequest) -> String {
-    let mut f = File::open("teamspeak.json").unwrap();
-    let mut s = String::new();
-    f.read_to_string(&mut s).unwrap();
-    s
+fn index(state: web::Data<Arc<Mutex<TeamspeakData>>>, _req: HttpRequest) -> String {
+    let data = state.lock().unwrap();
+    let output = Output {
+        status: 200,
+        nodes: data.nodes.clone(),
+    };
+    serde_json::to_string(&output).unwrap()
 }

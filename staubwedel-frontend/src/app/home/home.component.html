@@ -1,4 +1,6 @@
-<div class="home" fxLayout="row" fxLayoutAlign="space-around">
-  <app-teamspeak></app-teamspeak>
-  <app-twitch fxFlex></app-twitch>
+<div class="home" fxLayout.lt-sm="column" fxLayout.gt-sm="row" fxLayoutAlign="center top">
+  <app-teamspeak fxFlexOrder.lt-sm="2" fxFlexOrder.gt-sm="1"></app-teamspeak>
+  <app-twitch-video (heightChanged)="videoHeight=$event" fxFlexOrder.lt-sm="1" fxFlexOrder.gt-sm="2" fxFlex>
+  </app-twitch-video>
+  <app-twitch-chat fxHide.lt-md [chatHeight]="videoHeight" fxFlexOrder="3" fxFlex></app-twitch-chat>
 </div>
