@@ -2,15 +2,15 @@ use std::collections::HashMap;
 use telnet::Telnet;
 use telnet::TelnetEvent::{self, *};
 
-pub fn init_conn() -> Telnet {
-    let mut conn = Telnet::connect("shneky.com:10011", 4096).unwrap();
-    let _ = conn.read().unwrap();
+pub fn init_conn() -> Result<Telnet, std::io::Error> {
+    let mut conn = Telnet::connect("shnaky.com:10011", 4096)?;
+    let _ = conn.read()?;
 
-    conn.write(b"login shneky 9AsefCzT\r\n").unwrap();
-    let _ = conn.read().unwrap();
-    conn.write(b"use sid=1\r\n").unwrap();
-    let _ = conn.read().unwrap();
-    conn
+    conn.write(b"login shneky 9AsefCzT\r\n")?;
+    let _ = conn.read()?;
+    conn.write(b"use sid=1\r\n")?;
+    let _ = conn.read()?;
+    Ok(conn)
 }
 
 pub fn telnet_event_to_hashmap(event: &TelnetEvent) -> Option<Vec<HashMap<String, String>>> {

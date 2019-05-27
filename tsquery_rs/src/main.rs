@@ -33,10 +33,11 @@ fn main() {
     let teamspeak_data_arc_clone = teamspeak_data_arc.clone();
 
     thread::spawn(move || loop {
-        let mut conn = util::init_conn();
-        if let Ok(nodes) = tree_node::TreeNode::get_all(&mut conn) {
-            let mut teamspeak_data = teamspeak_data_arc_clone.lock().unwrap();
-            teamspeak_data.nodes = nodes;
+        if let Ok(mut conn) = util::init_conn() {
+            if let Ok(nodes) = tree_node::TreeNode::get_all(&mut conn) {
+                let mut teamspeak_data = teamspeak_data_arc_clone.lock().unwrap();
+                teamspeak_data.nodes = nodes;
+            }
         }
         thread::sleep(Duration::from_millis(2000));
     });
