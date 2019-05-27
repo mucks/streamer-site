@@ -22,7 +22,7 @@ services:
     environment:
       - VIRTUAL_HOST=derstaubwedel.com
       - LETSENCRYPT_HOST=derstaubwedel.com
-      - LETSENCRYPT_EMAIL=shneky@protonmail.com
+      - LETSENCRYPT_EMAIL=mail@shnaky.com
     depends_on:
       - backend
       - frontend
