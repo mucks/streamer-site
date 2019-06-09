@@ -2,12 +2,15 @@ version: '3'
 
 services:
   frontend:
-    build: ./staubwedel-frontend
+    build: ./streamer-site-frontend
     volumes: 
-      - frontend:/volume/dist/staubwedel-website
+      - frontend:/volume/dist/streamer-site-frontend
   backend:
     build: ./tsquery_rs
     restart: always
+    environment:
+      - TS_USERNAME=${TS_USERNAME}
+      - TS_PASSWORD=${TS_PASSWORD}
     expose: 
       - 3000
     networks:
@@ -20,9 +23,9 @@ services:
       - frontend:/usr/share/nginx/html:ro
       - ./default.conf:/etc/nginx/conf.d/default.conf:ro
     environment:
-      - VIRTUAL_HOST=derstaubwedel.com
-      - LETSENCRYPT_HOST=derstaubwedel.com
-      - LETSENCRYPT_EMAIL=mail@shnaky.com
+      - VIRTUAL_HOST=${VIRTUAL_HOST}
+      - LETSENCRYPT_HOST=${LETSENCRYPT_HOST}
+      - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
     depends_on:
       - backend
       - frontend
