@@ -4,7 +4,7 @@ services:
   frontend:
     build: ./streamer-site-frontend
     volumes: 
-      - frontend:/volume/dist/streamer-site-frontend
+      - frontend:/volume/dist/staubwedel-website
   backend:
     build: ./tsquery_rs
     restart: always
