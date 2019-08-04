@@ -1,6 +1,7 @@
 import {NestedTreeControl} from '@angular/cdk/tree';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MatTreeNestedDataSource} from '@angular/material';
+import {interval, Observable, Subscription} from 'rxjs';
 
 import {TeamspeakService} from './teamspeak.service';
 
@@ -18,8 +19,9 @@ interface ChannelNode {
 export class TeamspeakComponent implements OnInit, OnDestroy {
   treeControl = new NestedTreeControl<ChannelNode>(node => node.children);
   dataSource = new MatTreeNestedDataSource<ChannelNode>();
-  interval: any;
-  teamspeakUrl = 'derstaubwedel.com';
+  teamspeakUrl = '';
+  teamspeakTitle = 'Teamspeak Title';
+  timeSubscription: Subscription;
 
   constructor(private tsService: TeamspeakService) {}
 
@@ -27,12 +29,17 @@ export class TeamspeakComponent implements OnInit, OnDestroy {
       !!node.children && node.children.length > 0;
 
   ngOnInit() {
-    this.applyTeamspeak();
-    this.interval = setInterval(() => {
-      this.applyTeamspeak();
-    }, 1000);
-  }
+    this.tsService.getTeamspeakConfig().subscribe(data => {
+      this.teamspeakUrl = data['teamspeak_url'];
+      this.teamspeakTitle = data['teamspeak_title'];
+    });
 
+    this.applyTeamspeak();
+
+    this.timeSubscription = interval(1000).subscribe(val => {
+      this.applyTeamspeak();
+    });
+  }
   applyTeamspeak() {
     this.tsService.getTeamspeakData().subscribe(data => {
       if (data['status'] == 200) {
@@ -44,7 +51,7 @@ export class TeamspeakComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    clearInterval(this.interval);
+    this.timeSubscription.unsubscribe();
   }
 
   formatName(name: string): string {

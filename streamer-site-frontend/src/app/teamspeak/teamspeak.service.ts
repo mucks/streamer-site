@@ -8,4 +8,8 @@ export class TeamspeakService {
   getTeamspeakData() {
     return this.http.get('/api/tsquery');
   }
+
+  getTeamspeakConfig() {
+    return this.http.get('/api/config');
+  }
 }

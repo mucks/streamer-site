@@ -1,4 +1,5 @@
-import {Component, EventEmitter, HostListener, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
+import {SafeResourceUrl} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-twitch-video',
@@ -10,6 +11,7 @@ export class TwitchVideoComponent implements OnInit {
   videoHeight: number;
 
   @Output() heightChanged = new EventEmitter<number>();
+  @Input() twitchUrl: SafeResourceUrl;
 
   constructor() {
     this.twitchSize();
@@ -18,7 +20,7 @@ export class TwitchVideoComponent implements OnInit {
   ngOnInit() {}
 
   @HostListener('window:resize', ['$event'])
-  onResize(event) {
+  onResize() {
     this.twitchSize();
   }
 

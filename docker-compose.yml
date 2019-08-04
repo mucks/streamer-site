@@ -9,6 +9,7 @@ services:
     build: ./tsquery_rs
     restart: always
     environment:
+      - TS_HOST=${TS_HOST}
       - TS_USERNAME=${TS_USERNAME}
       - TS_PASSWORD=${TS_PASSWORD}
     expose: 

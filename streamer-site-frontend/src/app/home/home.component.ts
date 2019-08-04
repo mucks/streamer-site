@@ -1,3 +1,4 @@
+import {HttpClient} from '@angular/common/http';
 import {Component, OnInit, Sanitizer} from '@angular/core';
 
 @Component({
@@ -6,8 +7,5 @@ import {Component, OnInit, Sanitizer} from '@angular/core';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  videoHeight: number;
-  constructor() {}
-
   ngOnInit() {}
 }

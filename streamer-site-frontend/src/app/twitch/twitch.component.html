@@ -1,0 +1,5 @@
+<app-twitch-video [twitchUrl]="twitchVideoUrl" (heightChanged)="videoHeight=$event" fxFlexOrder.lt-sm="1"
+  fxFlexOrder.gt-sm="2" fxFlex>
+</app-twitch-video>
+<app-twitch-chat [twitchId]="twitchId" [twitchUrl]="twitchChatUrl" fxHide.lt-md [chatHeight]="videoHeight"
+  fxFlexOrder="3" fxFlex></app-twitch-chat>
