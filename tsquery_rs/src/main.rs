@@ -40,12 +40,14 @@ fn get_ts_envs() -> Result<(String, String, String), env::VarError> {
 
 #[cfg(debug_assertions)]
 fn main() {
+    println!("debug");
     run();
 }
 
 #[cfg(not(debug_assertions))]
 fn main() {
-    thread::sleep(Duration::from_secs(20));
+    println!("release");
+    thread::sleep(Duration::from_secs(60));
     run();
 }
 
@@ -58,6 +60,8 @@ fn run() {
 
         let teamspeak_data_arc_clone = teamspeak_data_arc.clone();
         let mut got_title = false;
+
+        println!("ts loop started");
 
         thread::spawn(move || loop {
             if let Ok(mut conn) = util::init_conn(&ts_host, &ts_username, &ts_password) {
