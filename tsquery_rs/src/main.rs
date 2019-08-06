@@ -38,7 +38,18 @@ fn get_ts_envs() -> Result<(String, String, String), env::VarError> {
     Ok((host, username, password))
 }
 
+#[cfg(debug_assertions)]
 fn main() {
+    run();
+}
+
+#[cfg(not(debug_assertions))]
+fn main() {
+    thread::sleep(Duration::from_secs(20));
+    run();
+}
+
+fn run() {
     if let Ok((ts_host, ts_username, ts_password)) = get_ts_envs() {
         let teamspeak_data_arc = Arc::new(Mutex::new(TeamspeakData {
             nodes: Vec::new(),
