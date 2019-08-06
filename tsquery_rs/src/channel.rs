@@ -19,7 +19,7 @@ impl Channel {
     pub fn get_all(conn: &mut Telnet) -> Result<Vec<Channel>, Error> {
         conn.write(b"channellist\r\n")?;
         thread::sleep(Duration::from_millis(100));
-        let event = conn.read()?;
+        let event = conn.read_nonblocking()?;
         if let Some(maps) = util::telnet_event_to_hashmap(&event) {
             Ok(maps.iter().map(|map| Channel::from(map)).collect())
         } else {

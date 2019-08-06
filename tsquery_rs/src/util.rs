@@ -4,12 +4,12 @@ use telnet::TelnetEvent::{self, *};
 
 pub fn init_conn(host: &str, username: &str, password: &str) -> Result<Telnet, std::io::Error> {
     let mut conn = Telnet::connect(format!("{}:10011", host), 4096)?;
-    let _ = conn.read()?;
+    let _ = conn.read_nonblocking()?;
 
     conn.write(format!("login {} {}\r\n", username, password).as_bytes())?;
-    let _ = conn.read()?;
+    let _ = conn.read_nonblocking()?;
     conn.write(b"use sid=1\r\n")?;
-    let _ = conn.read()?;
+    let _ = conn.read_nonblocking()?;
     Ok(conn)
 }
 
