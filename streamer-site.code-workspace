@@ -5,6 +5,9 @@
         },
         {
             "path": "streamer-site-frontend"
+        },
+        {
+            "path": "docker"
         }
     ]
 }

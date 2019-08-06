@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  app:
+    build: ./
+    restart: always
+    environment:
+      - TS_HOST=${TS_HOST}
+      - TS_USERNAME=${TS_USERNAME}
+      - TS_PASSWORD=${TS_PASSWORD}
+      - VIRTUAL_HOST=${VIRTUAL_HOST}
+      - LETSENCRYPT_HOST=${LETSENCRYPT_HOST}
+      - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
+    networks:
+      - nginx-proxy
+      - default
+
+networks:
+  nginx-proxy:
+    external: 
+      name: nginx-proxy

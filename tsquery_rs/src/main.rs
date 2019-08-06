@@ -1,9 +1,5 @@
-extern crate serde;
-extern crate serde_json;
-extern crate telnet;
 #[macro_use]
 extern crate serde_derive;
-
 
 mod channel;
 mod client;
@@ -11,7 +7,6 @@ mod err;
 mod general;
 mod tree_node;
 mod util;
-
 
 use actix_web::{web, App, HttpRequest, HttpServer};
 use std::env;
@@ -91,6 +86,7 @@ fn http_server(teamspeak_data: Arc<Mutex<TeamspeakData>>) {
             .data(teamspeak_data.clone())
             .service(web::resource("/api/tsquery").to(index))
             .service(web::resource("/api/config").to(config))
+            .service(actix_files::Files::new("/", "./dist").index_file("index.html"))
     })
     .bind("0.0.0.0:3000")
     .unwrap()
